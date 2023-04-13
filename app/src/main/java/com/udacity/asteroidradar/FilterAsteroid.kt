@@ -1,4 +1,4 @@
-package com.udacity.asteroidradar.util
+package com.udacity.asteroidradar
 
 enum class FilterAsteroid {
     TODAY,

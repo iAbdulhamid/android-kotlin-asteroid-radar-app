@@ -15,16 +15,16 @@ import com.udacity.asteroidradar.database.asDomainModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 class AsteroidRepository(private val database: AsteroidDatabase) {
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private val startDate = LocalDateTime.now()
+    private val startDate = Calendar.getInstance()
+    private val endDate = Calendar.getInstance().also { it.add(Calendar.DAY_OF_YEAR,7) }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private val endDate = LocalDateTime.now().minusDays(7)
 
     val allAsteroids: LiveData<List<Asteroid>> =
         Transformations.map(database.asteroidDao.getAsteroids()) {
@@ -33,16 +33,17 @@ class AsteroidRepository(private val database: AsteroidDatabase) {
 
     @RequiresApi(Build.VERSION_CODES.O)
     val todayAsteroids: LiveData<List<Asteroid>> =
-        Transformations.map(database.asteroidDao.getAsteroidsDay(startDate.format(DateTimeFormatter.ISO_DATE))) {
+        Transformations.map(database.asteroidDao.getAsteroidsDay(SimpleDateFormat("yyyy-MM-dd", Locale.US).format(startDate.time))) {
             it.asDomainModel()
         }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     val weekAsteroids: LiveData<List<Asteroid>> =
         Transformations.map(
             database.asteroidDao.getAsteroidsDate(
-                startDate.format(DateTimeFormatter.ISO_DATE),
-                endDate.format(DateTimeFormatter.ISO_DATE)
+                SimpleDateFormat("yyyy-MM-dd", Locale.US).format(startDate.time),
+                SimpleDateFormat("yyyy-MM-dd", Locale.US).format(endDate.time)
             )
         ) {
             it.asDomainModel()
@@ -54,9 +55,8 @@ class AsteroidRepository(private val database: AsteroidDatabase) {
                 val asteroids = AsteroidApiService.AsteroidApi.retrofitService.getAsteroids(NASA_API_KEY)
                 val result = parseAsteroidsJsonResult(JSONObject(asteroids))
                 database.asteroidDao.insertAll(*result.asDatabaseModel())
-                Log.d("Refresh Asteroids", "Success")
             } catch (err: Exception) {
-                Log.e("Failed: AsteroidRepFile", err.message.toString())
+                Log.e("Failed", err.message.toString())
             }
         }
     }

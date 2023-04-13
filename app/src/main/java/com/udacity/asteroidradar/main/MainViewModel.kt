@@ -11,10 +11,12 @@ import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.api.AsteroidApiService
 import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.repository.AsteroidRepository
-import com.udacity.asteroidradar.util.FilterAsteroid
+import com.udacity.asteroidradar.FilterAsteroid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 

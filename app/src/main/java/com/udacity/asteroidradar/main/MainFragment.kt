@@ -1,7 +1,10 @@
 package com.udacity.asteroidradar.main
 
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -9,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
-import com.udacity.asteroidradar.util.FilterAsteroid
+import com.udacity.asteroidradar.FilterAsteroid
 
 class MainFragment : Fragment() {
 
@@ -48,6 +51,7 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.asteroidList.observe(viewLifecycleOwner, Observer<List<Asteroid>> { asteroid ->

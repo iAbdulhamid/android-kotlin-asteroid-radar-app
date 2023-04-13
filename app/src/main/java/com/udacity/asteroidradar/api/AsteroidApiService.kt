@@ -5,7 +5,9 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.Constants.BASE_URL
+import kotlinx.coroutines.Deferred
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -35,6 +37,7 @@ class AsteroidApiService {
         private val okHttpClient: OkHttpClient = OkHttpClient.Builder()
             .readTimeout(60, TimeUnit.SECONDS)
             .connectTimeout(60, TimeUnit.SECONDS)
+            .addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
             .build()
 
         private val retrofit = Retrofit.Builder()
